@@ -6,13 +6,14 @@
 	// Feed URL
 	$feed = 'http://hn.algolia.com/api/v1/search_by_date?';
 
-	// Temp data file
+	// Specify path to  Temp data file
 	$file = 'date.txt';
 
-	// Set a last collected date - this will be dynamically updated later
+	// Set a last collected date
 	$lastDate = file_get_contents($file);
-	if(!$lastDate)
+	if(!$lastDate) {
 		$lastDate = 0;
+	}
 
 	// Parameters
 	$params = array(
