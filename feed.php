@@ -41,6 +41,23 @@
 	// Format the date - pass an @ if using timestamp
 	$date = new DateTime('@' . $story->created_at_i);
 
+	// Create fields array
+	$fields = array(
+		array('title' => 'Title', 'value' => '<' . $story->url . '|' . $story->title . '>'),
+		array('title' => 'Date', 'value' => $date->format('jS F Y g:ia'), 'short' => true),
+		array('title' => 'Author', 'value' => $story->author, 'short' => true)
+	);
+
+	// Conditional field if story_text is present (strip any HTML tags)
+	if($story->story_text != null) {
+		$fields[] = array('title' => 'Story text', 'value' => strip_tags($story->story_text));
+	}
+
+	// Conditional field if comment_text is present
+	if($story->comment_text != null) {
+		$fields[] = array('title' => 'Comment text', 'value' => strip_tags($story->comment_text));
+	}
+
 	// Encode the data
 	$payload = 'payload=' . json_encode(array(
 		// Username and nice icon
@@ -51,12 +68,11 @@
 		'pretext' => 'A new story from Hacker News',
 		'fallback' => 'New hack news story - ' . $story->url,
 
+		// Hacker news orange
+		'color' => '#ff6600',
+
 		// Title as a link, date and author of the news story
-		'fields' => array(
-			array('title' => 'Title', 'value' => '<' . $story->url . '|' . $story->title . '>'),
-			array('title' => 'Date', 'value' => $date->format('jS F Y g:ia'), 'short' => true),
-			array('title' => 'Author', 'value' => $story->author, 'short' => true),
-		)
+		'fields' => $fields
 	));
 
 	// PHP cURL POST request
